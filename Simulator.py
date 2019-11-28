@@ -63,11 +63,14 @@ class Simulator:
     def life_rules(self, x, y):
         current_state = self.world.get(x, y)
         alive_neighbours = self.world.get_neighbours(x, y).count(1)
-        if current_state == 0 and alive_neighbours == 3:
-            return 1
+        if current_state == 1 and alive_neighbours < 2:
+            return 0
         elif current_state == 1 and alive_neighbours > 3:
             return 0
-        elif current_state == 1 and alive_neighbours < 2:
-            return 0
-        else:
+        elif current_state == 1 and (alive_neighbours == 3 or alive_neighbours == 2):
             return 1
+        elif current_state == 0 and alive_neighbours == 3:
+
+            return 1
+        else:
+            return 0
