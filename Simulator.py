@@ -77,7 +77,7 @@ class Simulator:
         alive_neighbours = self.world.get_neighbours(x, y).count(1)
 
         # birth
-        if not current_state and alive_neighbours == self.birth_neighbours:
+        if not current_state and alive_neighbours in self.birth_neighbours:
             return 1
 
         # survival
