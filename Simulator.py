@@ -65,12 +65,14 @@ class Simulator:
 
     @staticmethod
     def split_rules(rules) -> List[int]:
+        """Splits rule string into birth and survival int lists"""
         birth_neighbours = [int(i) for i in rules.split('/')[0] if i.isdigit()]
         survival_neighbours = [int(i) for i in rules.split('/')[1] if i.isdigit()]
         return birth_neighbours, survival_neighbours
 
 
     def life_rules(self, x, y) -> int:
+        """Calculates state for current cell by checking some if statements and comparing to rules"""
         current_state = self.world.get(x, y)
         alive_neighbours = self.world.get_neighbours(x, y).count(1)
 
@@ -82,6 +84,7 @@ class Simulator:
         if alive_neighbours in self.survival_neighbours:
             return 1
 
+        # death
         else:
             return 0
 
