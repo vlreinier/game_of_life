@@ -6,19 +6,21 @@ class World:
     Data structure for representing Game of Life worlds.
     """
 
-    def __init__(self, width: int, height: int = -1):
+    def __init__(self, width: int, height: int = -1, alive_cells: float = 0.5):
         """
         Constructor of World datatype.
 
         :param width: integer representing the width of the world.
         :param height: (optional) integer representing the height of the world. If left implicit, the value of ``width`` is used to create a square-shaped world.
+        :param alive_cells: percentage alive cells, filled with 1
         """
         self.width = width
         if not height == -1:
             self.height = height
         else:
             self.height = width
-        self.world = np.zeros((self.height, self.width), dtype=int)
+        self.world = np.random.binomial(1, alive_cells, self.height * self.width).reshape(self.height, self.width)
+
 
     def get(self, x: int, y: int) -> int:
         """

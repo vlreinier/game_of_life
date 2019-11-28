@@ -1,4 +1,5 @@
 from World import *
+import random
 
 class Simulator:
     """
@@ -24,9 +25,13 @@ class Simulator:
 
         :return: New state of the world.
         """
+
         self.generation += 1
 
-        #TODO: Do something to evolve the generation
+        # game of life rules
+        for x in range(len(self.world.world)):
+            for y in range(len(self.world.world[x])):
+                self.world.set(x, y, self.life_rules(x, y))
 
         return self.world
 
@@ -54,3 +59,15 @@ class Simulator:
 
         """
         self.world = world
+
+    def life_rules(self, x, y):
+        current_state = self.world.get(x, y)
+        alive_neighbours = self.world.get_neighbours(x, y).count(1)
+        if current_state == 0 and alive_neighbours == 3:
+            return 1
+        elif current_state == 1 and alive_neighbours > 3:
+            return 0
+        elif current_state == 1 and alive_neighbours < 2:
+            return 0
+        else:
+            return 1

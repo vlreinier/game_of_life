@@ -8,10 +8,15 @@ class TestWorld(TestCase):
     """
     def setUp(self):
         """
-        Common setup for running tests
+        Common setup for running tests, with testing filling cells with dead or alive states
         """
         self.width, self.height = 10, 12
-        self.world = World(self.width, self.height)
+
+        self.world = World(self.width, self.height, 1)  # 100% will be filled with state alive (1)
+        self.assertEqual(np.sum(self.world.world), self.height * self.width)  # sum of all cells must be num of cells
+
+        self.world = World(self.width, self.height, 0)  # 0% will be filled with state alive (0)
+        self.assertEqual(np.sum(self.world.world), 0)  # sum of all cells must be 0
 
     def test_set(self):
         """
