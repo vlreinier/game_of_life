@@ -7,7 +7,7 @@ VISUALISATION=True
 
 if __name__ == "__main__":
     w = World(110, alive_cells=0.9)
-    sim = Simulator(w)
+    sim = Simulator(w, rules='B3/S23')
 
     if VISUALISATION:
         vis = Visualisation(sim)

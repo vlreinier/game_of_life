@@ -7,17 +7,20 @@ class Simulator:
     Read https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life for an introduction to Conway's Game of Life.
     """
 
-    def __init__(self, world = None):
+    def __init__(self, world = None, rules='B3/S23'):
         """
         Constructor for Game of Life simulator.
 
         :param world: (optional) environment used to simulate Game of Life.
         """
         self.generation = 0
+        self.birth_neighbours, self.survival_neighbours = Simulator.split_rules(rules)
         if world == None:
             self.world = World(20)
         else:
             self.world = world
+
+
 
     def update(self) -> World:
         """
@@ -60,17 +63,40 @@ class Simulator:
         """
         self.world = world
 
-    def life_rules(self, x, y):
+    @staticmethod
+    def split_rules(rules) -> List[int]:
+        birth_neighbours = [int(i) for i in rules.split('/')[0] if i.isdigit()]
+        survival_neighbours = [int(i) for i in rules.split('/')[1] if i.isdigit()]
+        return birth_neighbours, survival_neighbours
+
+
+    def life_rules(self, x, y) -> int:
         current_state = self.world.get(x, y)
         alive_neighbours = self.world.get_neighbours(x, y).count(1)
-        if current_state == 1 and alive_neighbours < 2:
-            return 0
-        elif current_state == 1 and alive_neighbours > 3:
-            return 0
-        elif current_state == 1 and (alive_neighbours == 3 or alive_neighbours == 2):
-            return 1
-        elif current_state == 0 and alive_neighbours == 3:
 
+        # birth
+        if not current_state and alive_neighbours == self.birth_neighbours:
             return 1
+
+        # survival
+        if alive_neighbours in self.survival_neighbours:
+            return 1
+
         else:
             return 0
+
+
+    # def life_rules_OLD(self, x, y):
+    #     current_state = self.world.get(x, y)
+    #     alive_neighbours = self.world.get_neighbours(x, y).count(1)
+    #     if current_state == 1 and alive_neighbours < 2:
+    #         return 0
+    #     elif current_state == 1 and alive_neighbours > 3:
+    #         return 0
+    #     elif current_state == 1 and (alive_neighbours == 3 or alive_neighbours == 2):
+    #         return 1
+    #     elif current_state == 0 and alive_neighbours == 3:
+    #
+    #         return 1
+    #     else:
+    #         return 0

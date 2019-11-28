@@ -45,27 +45,29 @@ class TestSimulator(TestCase):
         self.assertIsInstance(self.sim.get_world(), World)
         self.assertIs(self.sim.get_world(), world)
 
-    def test_life_rules(self):
+    def test_life_rules_OLD(self):
         """
         Tests functionality of life_rules function.
         """
 
+        """state must be zero since 'Elke levende cel met minder dan twee levende buren """
+        """gaat dood (ook wel onderpopulatie of exposure genaamd);"""
         world = World(110, alive_cells=0)  # all cells are dead 0
         self.sim.set_world(world)  # set world in simulator object
         self.sim.world.set(0, 0, 1)  # set 2 cells alive
         self.sim.world.set(0, 1, 1)
         state = self.sim.life_rules(0, 1)  # check state
         self.assertEqual(state, 0)
-        """ state must be zero since 'Elke levende cel met minder dan twee levende buren """
-        """gaat dood (ook wel onderpopulatie of exposure genaamd);"""
 
+        """state must be zero since all cells are alive (1)'Elke levende cel met meer dan drie levende buren """
+        """gaat dood (ook wel overpopulatie of overcrowding genaamd);"""
         world = World(110, alive_cells=1)  # all cells are alive
         self.sim.set_world(world)  # set world in simulator object
         state = self.sim.life_rules(0, 0)  # return calculated state (0 or 1) for cell
         self.assertEqual(state, 0)
-        """ state must be zero since all cells are alive (1)'Elke levende cel met meer dan drie levende buren """
-        """gaat dood (ook wel overpopulatie of overcrowding genaamd);"""
 
+        """state must be zero or one since all cells are alive (1)'Elke cel met twee of drie levende buren overleeft"""
+        """onveranderd naar de volgende generatie (survival);"""
         world = World(110, alive_cells=0)  # all cells are dead
         self.sim.set_world(world)  # set world in simulator object
         self.sim.world.set(0, 0, 1)
@@ -76,19 +78,48 @@ class TestSimulator(TestCase):
         self.sim.world.set(0, 1, 0)
         state = self.sim.life_rules(0, 1)
         self.assertEqual(state, 0)  # checking for state dead with 2 alive neighbours
-        """ state must be zero since all cells are alive (1)'Elke cel met twee of drie levende buren overleeft, """
-        """onveranderd naar de volgende generatie (survival);"""
 
+        """state must be one since 'elke dode cel met precies drie levende buren komt tot leven """
+        """(ook wel geboorte of birth genaamd)."""
         world = World(110, alive_cells=0)  # all cells are dead 0
         self.sim.set_world(world)  # set world in simulator object
-        self.sim.world.set(0, 0, 1)  # set 2 cells alive
+        self.sim.world.set(0, 0, 1)
         self.sim.world.set(0, 1, 0)
         self.sim.world.set(0, 2, 1)
         self.sim.world.set(1, 1, 1)
         state = self.sim.life_rules(0, 1)  # check state
         self.assertEqual(state, 1)
-        """ state must be zero since 'elke dode cel met precies drie levende buren komt tot leven """
-        """(ook wel geboorte of birth genaamd)."""
+
+    def test_life_rules(self):
+        """
+        Tests functionality of life_rules function.
+        """
+
+        """birth with 3 alive neighbours"""
+        world = World(110, alive_cells=0)  # all cells are dead 0
+        self.sim.set_world(world)  # set world in simulator object
+        self.sim.world.set(0, 0, 1)
+        self.sim.world.set(0, 1, 0)
+        self.sim.world.set(0, 2, 1)
+        self.sim.world.set(1, 1, 1)
+        state = self.sim.life_rules(0, 1)  # check state
+        self.assertEqual(state, 1)
+
+        """survival with 2 or 3 alive neighbours"""
+        world = World(110, alive_cells=0)  # all cells are dead
+        self.sim.set_world(world)  # set world in simulator object
+        self.sim.world.set(0, 0, 1)
+        self.sim.world.set(0, 1, 1)
+        self.sim.world.set(0, 2, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 1)  # checking for state survival with 2 alive neighbours
+        self.sim.world.set(1, 1, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 1)  # checking for state survival with 3 alive neighbours
+        self.sim.world.set(1, 2, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 0)  # checking for state dead with 4 alive neighbours
+
 
 
 test = TestSimulator()
