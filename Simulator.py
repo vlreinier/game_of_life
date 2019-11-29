@@ -7,7 +7,7 @@ class Simulator:
     Read https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life for an introduction to Conway's Game of Life.
     """
 
-    def __init__(self, world = None, rules='B3/S23', start_age=2):
+    def __init__(self, world = None, rules='B3/S23', start_age=0):
         """
         Constructor for Game of Life simulator.
 

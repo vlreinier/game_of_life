@@ -124,32 +124,23 @@ class TestSimulator(TestCase):
         """
         Tests functionality of life_rules function.
         """
+        self.sim = Simulator(World(110), rules='B3/S23/A5', start_age=0) # fertile = [2-3]
 
-        """birth with 3 fertile neighbours"""
-        world = World(110)  # all cells are dead 0
-        self.sim.set_world(world)  # set world in simulator object
-        self.sim.world.set(0, 0, 3)
-        self.sim.world.set(0, 1, 0)
+        """birth if fertile with 3 alive neighbours"""
+        self.sim.world.set(0, 0, 2)
+        self.sim.world.set(0, 1, 2)
         self.sim.world.set(0, 2, 1)
-        self.sim.world.set(1, 1, 1)
+        self.sim.world.set(1, 1, 3)
         state = self.sim.life_rules(0, 1)  # check state
-        self.assertEqual(state, 1)
+        self.assertEqual(state, 3)  # age must be +1
 
-        """survival with 2 or 3 alive neighbours"""
-        world = World(110)  # all cells are dead
-        self.sim.set_world(world)  # set world in simulator object
-        self.sim.world.set(0, 0, 1)
-        self.sim.world.set(0, 1, 1)
-        self.sim.world.set(0, 2, 1)
-        state = self.sim.life_rules(0, 1)
-        self.assertEqual(state, 1)  # checking for state survival with 2 alive neighbours
-        self.sim.world.set(1, 1, 1)
-        state = self.sim.life_rules(0, 1)
-        self.assertEqual(state, 1)  # checking for state survival with 3 alive neighbours
-        self.sim.world.set(1, 2, 1)
-        state = self.sim.life_rules(0, 1)
-        self.assertEqual(state, 0)  # checking for state dead with 4 alive neighbours
+        """survival"""
+        self.sim.world.set(2, 0, 2)
+        self.sim.world.set(2, 1, 0)
+        self.sim.world.set(2, 2, 1)
+        state = self.sim.life_rules(2, 1)  # check state
+        self.assertEqual(state, 0)  # age must be same
+
 
 test = TestSimulator()
-test.setUp()
-test.test_life_rules()
+test.test_life_rules_V3()
