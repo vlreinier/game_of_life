@@ -45,7 +45,7 @@ class TestSimulator(TestCase):
         self.assertIsInstance(self.sim.get_world(), World)
         self.assertIs(self.sim.get_world(), world)
 
-    def test_life_rules_OLD(self):
+    def test_life_rules_V1(self):
         """
         Tests functionality of life_rules function.
         """
@@ -90,7 +90,7 @@ class TestSimulator(TestCase):
         state = self.sim.life_rules(0, 1)  # check state
         self.assertEqual(state, 1)
 
-    def test_life_rules(self):
+    def test_life_rules_V2(self):
         """
         Tests functionality of life_rules function.
         """
@@ -120,7 +120,35 @@ class TestSimulator(TestCase):
         state = self.sim.life_rules(0, 1)
         self.assertEqual(state, 0)  # checking for state dead with 4 alive neighbours
 
+    def test_life_rules_V3(self):
+        """
+        Tests functionality of life_rules function.
+        """
 
+        """birth with 3 fertile neighbours"""
+        world = World(110)  # all cells are dead 0
+        self.sim.set_world(world)  # set world in simulator object
+        self.sim.world.set(0, 0, 3)
+        self.sim.world.set(0, 1, 0)
+        self.sim.world.set(0, 2, 1)
+        self.sim.world.set(1, 1, 1)
+        state = self.sim.life_rules(0, 1)  # check state
+        self.assertEqual(state, 1)
+
+        """survival with 2 or 3 alive neighbours"""
+        world = World(110)  # all cells are dead
+        self.sim.set_world(world)  # set world in simulator object
+        self.sim.world.set(0, 0, 1)
+        self.sim.world.set(0, 1, 1)
+        self.sim.world.set(0, 2, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 1)  # checking for state survival with 2 alive neighbours
+        self.sim.world.set(1, 1, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 1)  # checking for state survival with 3 alive neighbours
+        self.sim.world.set(1, 2, 1)
+        state = self.sim.life_rules(0, 1)
+        self.assertEqual(state, 0)  # checking for state dead with 4 alive neighbours
 
 test = TestSimulator()
 test.setUp()
