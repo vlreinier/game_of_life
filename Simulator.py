@@ -14,6 +14,10 @@ class Simulator:
         :param world: (optional) environment used to simulate Game of Life.
         """
         self.generation = 0
+        if len(rules.split('/')) == 3:
+            self.mode = 'decay of age'
+        else:
+            self.mode = 'standard'
         self.birth_neighbours, self.survival_neighbours = Simulator.split_rules(rules)
         if world == None:
             self.world = World(20)
@@ -34,7 +38,7 @@ class Simulator:
         # game of life rules
         for x in range(len(self.world.world)):
             for y in range(len(self.world.world[x])):
-                self.world.set(x, y, self.life_rules(x, y))
+                self.world.set(x, y, self.life_rules(self.world.get(x, y), self.world.get_neighbours(x, y).count(1)))
 
         return self.world
 
@@ -64,29 +68,37 @@ class Simulator:
         self.world = world
 
     @staticmethod
-    def split_rules(rules) -> List[int]:
+    def get_rules(rules) -> List[int]:
         """Splits rule string into birth and survival int lists"""
-        birth_neighbours = [int(i) for i in rules.split('/')[0] if i.isdigit()]
+        rules = rules.split('/')
+
+        if len(rules) ==
+        birth_neighbours = [int(i) for i in rules.split('/')[index] if i.isdigit()]
         survival_neighbours = [int(i) for i in rules.split('/')[1] if i.isdigit()]
         return birth_neighbours, survival_neighbours
 
-
-    def life_rules(self, x, y) -> int:
+    def life_rules(self, current_state, alive_neighbours) -> int:
         """Calculates state for current cell by checking some if statements and comparing to rules"""
-        current_state = self.world.get(x, y)
-        alive_neighbours = self.world.get_neighbours(x, y).count(1)
-
-        # birth
-        if not current_state and alive_neighbours in self.birth_neighbours:
-            return 1
-
-        # survival
-        if alive_neighbours in self.survival_neighbours:
-            return 1
-
-        # death
+        if self.mode == 'decay of age':
+            # birth
+            if current_state in [2, 3, 4] and alive_neighbours in self.birth_neighbours:
+                return +1
+            # survival
+            if current_state == 6 and alive_neighbours in self.survival_neighbours:
+                return current_state
+            # death
+            else:
+                return -1
         else:
-            return 0
+            # birth
+            if not current_state and alive_neighbours in self.birth_neighbours:
+                return 1
+            # survival
+            if current_state and alive_neighbours in self.survival_neighbours:
+                return 1
+            # death
+            else:
+                return 0
 
 
     # def life_rules_OLD(self, x, y):

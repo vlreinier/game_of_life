@@ -6,7 +6,7 @@ class World:
     Data structure for representing Game of Life worlds.
     """
 
-    def __init__(self, width: int, height: int = -1, alive_cells: float = 0.5):
+    def __init__(self, width: int, height: int = -1, fill_cells: float = 0.5):
         """
         Constructor of World datatype.
 
@@ -19,7 +19,7 @@ class World:
             self.height = height
         else:
             self.height = width
-        self.world = np.random.binomial(1, alive_cells, self.height * self.width).reshape(self.height, self.width)
+        self.world = np.random.binomial(1, fill_cells, self.height * self.width).reshape(self.height, self.width)
 
 
     def get(self, x: int, y: int) -> int:

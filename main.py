@@ -6,7 +6,7 @@ import time
 VISUALISATION=True
 
 if __name__ == "__main__":
-    w = World(110, alive_cells=0.2)
+    w = World(110, fill_cells=0.2)
     sim = Simulator(w, rules='B338/S237')
 
     if VISUALISATION:
